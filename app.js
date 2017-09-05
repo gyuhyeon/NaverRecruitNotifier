@@ -63,6 +63,7 @@ function checkUpdate(){
         var PAGE_ENCODING = 'utf-8'; // change to match page encoding
         
         function parse(url, position_type, prevjoblist) {
+            /* uh... the website is javascript rendered.. *sigh* basically, we have to use post requests instead
             (function(prevjoblist){
                 request({
                     url: url,
@@ -71,8 +72,9 @@ function checkUpdate(){
                     var joblist = [];
                     var $ = cheerio.load(iconv.decode(body, PAGE_ENCODING));
                     
+                    
                     $('.card_list > ul > li > a > span > strong').each(function(){
-                        if(prevjoblist.indexOf($(this).test()) >= 0){ //indexOf returns -1 if not found in list
+                        if(prevjoblist.indexOf($(this).text()) == -1){ //indexOf returns -1 if not found in list
                             joblist.push(position_type + $(this).text());
                             connection.query('INSERT INTO `NaverJobs`(jobTitle) VALUES ("' + $(this).text() + '");');
                         }
@@ -83,14 +85,29 @@ function checkUpdate(){
                     }
                 });//end of request
             })(prevjoblist);//IIFE to pass prevjoblist from query to a request callback to check for prev states
+            //BTW, IIFE is actually not needed for accessing global scopes in this manner...
+            */
+            request.post({url:url}, function(error, response, body){
+                var jsondata = JSON.parse(body);
+                var joblist = [];
+                for(var i=0; i<jsondata.length; ++i){
+                    if(prevjoblist.indexOf(jsondata[i].jobNm)==-1){
+                        joblist.push(position_type + jsondata[i].jobNm);
+                        connection.query('INSERT INTO `NaverJobs`(jobTitle) VALUES ("' + jsondata[i].jobNm + '");');
+                    }
+                }
+                if(joblist.length>0){
+                    sendNotification(position_type.slice(0,2)+" 공고가 업데이트 되었습니다.");
+                }
+            });
         }//end of parse function definition
         
         //full-time positions
-        parse('https://recruit.navercorp.com/naver/job/list/developer?locationCd=&entTypeCd=001&searchTxt=', "신입_", prevjoblist);
+        parse('https://recruit.navercorp.com/naver/job/listJson?classNm=developer&entTypeCd=001&searchTxt=&startNum=0&endNum=50', "신입_", prevjoblist);
         //internship positions
-        parse('https://recruit.navercorp.com/naver/job/list/developer?locationCd=&entTypeCd=004&searchTxt=', "인턴_", prevjoblist);
+        parse('https://recruit.navercorp.com/naver/job/listJson?classNm=developer&entTypeCd=004&searchTxt=&startNum=0&endNum=50', "인턴_", prevjoblist);
         //transfer positions(testing purposes)
-        parse('https://recruit.navercorp.com/naver/job/list/developer?locationCd=&entTypeCd=002&searchTxt=', "경력_", prevjoblist);
+        parse('https://recruit.navercorp.com/naver/job/listJson?classNm=developer&entTypeCd=002&searchTxt=&startNum=0&endNum=50', "경력_", prevjoblist);
         
     });
     
