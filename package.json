@@ -1,0 +1,18 @@
+{
+  "name": "Naver-Recruit-Notifier",
+  "version": "0.0.1",
+  "description": "notifies when new notice comes up",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cheerio": "^1.0.0-rc.2",
+    "cookie-parser": "^1.4.3",
+    "ejs": "~2.4.1",
+    "express": "^4.13.4",
+    "iconv-lite": "^0.4.18",
+    "morgan": "^1.7.0",
+    "mysql": "^2.10.2",
+    "path": "^0.12.7",
+    "request": "^2.81.0",
+    "twilio": "^3.6.5"
+  }
+}
