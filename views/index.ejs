@@ -18,7 +18,7 @@
             <p>Enter your phone number below. You will get a confirmation SMS once successfully listed.</p>
             <p>Made with ♥ by Gyuhyeon Lee</p>
         </div>
-        <form name="notification_enlist" method="POST" action="enlist" onsubmit="return verify()">
+        <form id = "notification_enlist" name="notification_enlist" method="POST" action="enlist" onsubmit="return verify()">
             <input type="text" name="phonenumber" placeholder="010-0000-0000">
             <input type="submit" value="등록하기">
             <div class="g-recaptcha" data-sitekey="6Lf9jS8UAAAAAHTywmuZX53V3Aez9FusbLBHSL6n"></div>
@@ -40,7 +40,7 @@
         }
         $(document).ready(function() {
             // process the form
-            $('#reserveform').submit(function(event) {
+            $('#notification_enlist').submit(function(event) {
 
                 // get the form data
                 // there are many ways to get this data using jQuery (you can use the class or id also)
