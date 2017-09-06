@@ -18,7 +18,7 @@
             <p>Enter your phone number below. You will get a confirmation SMS once successfully listed.</p>
             <p>Made with ♥ by Gyuhyeon Lee</p>
         </div>
-        <form id = "notification_enlist" name="notification_enlist" method="POST" action="enlist" onsubmit="return verify()">
+        <form id = "notification_enlist" name="notification_enlist" method="POST" onsubmit="return verify()">
             <input type="text" name="phonenumber" placeholder="010-0000-0000">
             <input type="submit" value="등록하기">
             <div class="g-recaptcha" data-sitekey="6Lf9jS8UAAAAAHTywmuZX53V3Aez9FusbLBHSL6n"></div>
@@ -29,7 +29,7 @@
     <script>
         function verify(){
             var regex = /^\d{3}-\d{4}-\d{4}$/; //comment for the inquisitive : you can't get around this one. Server side validation also exists, this is just to provide a slightly faster response to the user :P
-            var m = document.getElementByName("phonenumber")[0].value.match(regex);
+            var m = document.getElementsByName("phonenumber")[0].value.match(regex);
             if(m){
                 return true;
             }
