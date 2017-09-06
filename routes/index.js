@@ -13,14 +13,14 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/enlist', function(req, res, next) {
-    if(req.body.g-recaptcha-response === undefined || req.body.g-recaptcha-response === '' || req.body.g-recaptcha-response === null) {
+    if(req.body['g-recaptcha-response'] === undefined || req.body['g-recaptcha-response'] === '' || req.body['g-recaptcha-response'] === null) {
         return res.json({"response" : "Please complete recaptcha."});
     }
     var regex = /^\d{3}-\d{4}-\d{4}$/;
     if(!req.body.phonenumber.match(regex)){
         return res.json({"response" : "Please input a correct phone number. (000-0000-0000)"});
     }
-    request.post({url:"https://www.google.com/recaptcha/api/siteverify", form:{"secret" : config.captchasecret, "response" : req.body.g-recaptcha-response}}, function(error, response, body){
+    request.post({url:"https://www.google.com/recaptcha/api/siteverify", form:{"secret" : config.captchasecret, "response" : req.body['g-recaptcha-response']}}, function(error, response, body){
         body = JSON.parse(body);
         // Success will be true or false depending upon captcha validation.
         if(body.success !== undefined && !body.success) {
