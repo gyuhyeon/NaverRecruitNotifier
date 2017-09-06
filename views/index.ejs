@@ -18,7 +18,7 @@
             <p>Enter your phone number below. You will get a confirmation SMS once successfully listed.</p>
             <p>Made with ♥ by Gyuhyeon Lee</p>
         </div>
-        <form id = "notification_enlist" name="notification_enlist" method="POST" onsubmit="return verify()">
+        <form id = "notification_enlist" name="notification_enlist" method="POST">
             <input type="text" name="phonenumber" placeholder="010-0000-0000">
             <input type="submit" value="등록하기">
             <div class="g-recaptcha" data-sitekey="6Lf9jS8UAAAAAHTywmuZX53V3Aez9FusbLBHSL6n"></div>
@@ -70,7 +70,7 @@
                         //show as alert
                         alert(data['response']);
                         //force client reload on success
-                        if(data['response'].length<10){
+                        if(true){
                             location.reload();
                         }
                         // here we will handle errors and validation messages
