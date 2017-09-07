@@ -39,10 +39,19 @@ app.use('/', index);
 //BELOW IS CRAWLING FEATURE IMPLEMENTATION & setInterval LOOP
 
 /*
+config.js template is as below. Do NOT ever store sensitive credentials inside an open source code and/or publicly accessible(broadcasted) addresses.
+
 var mysqlConfig = {
-	'host' : 'hostaddress',
-	'user' : 'username', 'password' : 'password', 'database' : 'databasename',
-}
+    'host' : 'hostaddress',
+    'user' : 'username',
+    'password' : 'password',
+    'database' : 'NaverJobs'
+};
+var twaccountSid = 'secret';
+var twaccountToken = 'secret';
+module.exports.mysqlConfig = mysqlConfig;
+module.exports.twaccountSid = twaccountSid;
+module.exports.twaccountToken = twaccountToken;
 */
 var connection = mysql.createConnection(config.mysqlConfig);
 
@@ -113,28 +122,38 @@ function checkUpdate(){
     
 }
 
-function sendNotification(msg = '채용 공고가 업데이트 되었습니다.'){
-    //twilio setup
-    var twclient = new twilio(config.twaccountSid, config.twaccountToken);
+//might as well just make twclient global in this scope
+var twclient = new twilio(config.twaccountSid, config.twaccountToken);
+function sendSMS(dest, msg){
     //send message
     twclient.messages.create({
         body: msg,
-        to: '+821072481535',
+        to: '+82'+dest,
         from: '+12568184331'
     })
     .then((message) => console.log(message.sid));
 }
 
+function sendNotification(msg = '채용 공고가 업데이트 되었습니다.'){
+    connection.query('SELECT * FROM `NotifyList`', function(error, cursor){
+        var notifylist=[];
+        if(error==null){
+            for(var i=0; i<cursor.length; i++){
+                notifylist.push(cursor[i].phonenumber);
+            }
+        }
+        else{
+            console.log(error);
+            return; //end the query and its future processing to prevent weird behaviors when db is inaccessible
+        }
+        for(var i=0; i<notifylist.length && i<30; ++i){ //limit list to 30 to prevent going bankrupt...
+            sendSMS(notifylist[i], msg);
+        }
+    }); //end of connection.query
+}
+
 //test once when server starts running
-//twilio setup
-var twclient = new twilio(config.twaccountSid, config.twaccountToken);
-//send message
-twclient.messages.create({
-    body: "Twilio operational :)",
-    to: '+821072481535',
-    from: '+12568184331'
-})
-.then((message) => console.log(message.sid));
+sendSMS("010-7248-1535", "Twilio operational :)");
 
 
 setInterval(checkUpdate, 20000);

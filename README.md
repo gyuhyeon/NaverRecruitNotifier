@@ -4,7 +4,7 @@ Notification working example :
   
 ![alt text][logo]
 
-[logo]: http://i.imgur.com/EXXNN6t.png "example"  
+[logo]: http://i.imgur.com/EXXNN6t.png? "example"  
 
 # Languages/Libraries used
 + Node.js w/ express & request (Server backend)

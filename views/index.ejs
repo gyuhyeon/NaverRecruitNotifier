@@ -1,18 +1,85 @@
-<!doctype html>
-<title><%title%></title>
-<style>
-  body { text-align: center; padding: 150px; }
-  h1 { font-size: 50px; }
-  body { font: 20px Helvetica, sans-serif; color: #333; }
-  article { display: block; text-align: left; width: 650px; margin: 0 auto; }
-  a { color: #dc8100; text-decoration: none; }
-  a:hover { color: #333; text-decoration: none; }
-</style>
+<!DOCTYPE html>
+<head>
+    <title><%title%></title>
+    <style>
+        body { text-align: center; padding: 150px; }
+        h1 { font-size: 50px; }
+        body { font: 20px Helvetica, sans-serif; color: #333; }
+        article { display: block; text-align: left; width: 650px; margin: 0 auto; }
+        a { color: #dc8100; text-decoration: none; }
+        a:hover { color: #333; text-decoration: none; }
+    </style>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+</head>
+<body>
+    <article>
+        <h1>Enlist for notification</h1>
+        <div>
+            <p>Enter your phone number below. You will get a confirmation SMS once successfully listed.</p>
+            <p>Made with ♥ by Gyuhyeon Lee</p>
+        </div>
+        <form id = "notification_enlist" name="notification_enlist">
+            <input type="text" name="phonenumber" placeholder="010-0000-0000">
+            <input type="submit" value="등록하기">
+            <div class="g-recaptcha" data-sitekey="6Lf9jS8UAAAAAHTywmuZX53V3Aez9FusbLBHSL6n"></div>
+        </form>
+    </article>
 
-<article>
-    <h1>I'll be back soon!</h1>
-    <div>
-        <p>Sorry for the inconvenience but the service isn't ready yet. If you need to you can always <a href="mailto:mark3236@naver.com">contact us</a>, otherwise I'll be back online shortly!</p>
-        <p>- Gyuhyeon Lee</p>
-    </div>
-</article>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script>
+        function verify(){
+            var regex = /^\d{3}-\d{4}-\d{4}$/; //comment for the inquisitive : you can't get around this one. Server side validation also exists, this is just to provide a slightly faster response to the user :P
+            var m = document.getElementsByName("phonenumber")[0].value.match(regex);
+            if(m){
+                return true;
+            }
+            else{
+                alert("전화번호는 000-0000-0000 형태로 입력해주세요!");
+                return false;
+            }
+        }
+        $(document).ready(function() {
+            // process the form
+            $('#notification_enlist').submit(function(event) {
+                //if input verification failed
+                if(verify()==false){
+                    return;
+                }
+
+                // get the form data
+                // there are many ways to get this data using jQuery (you can use the class or id also)
+                var formData = {
+                    'phonenumber'        : $('input[name="phonenumber"]').val(),
+                    'g-recaptcha-response': grecaptcha.getResponse()
+                };
+
+                // process the form
+                $.ajax({
+                    type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                    url         : 'enlist', // the url where we want to POST
+                    data        : formData, // our data object
+                    dataType    : 'json', // what type of data do we expect back from the server
+                                encode          : true
+                })
+                    // using the done promise callback
+                    .done(function(data) {
+
+                        // log data to the console so we can see
+                        //console.log(data); 
+
+                        //show as alert
+                        alert(data['response']);
+                        //force client reload on success
+                        if(true){
+                            location.reload(); 
+                        }
+                        // here we will handle errors and validation messages
+                    });
+
+                // stop the form from submitting the normal way and refreshing the page
+                event.preventDefault();
+            });
+        });
+    </script>
+</body>
+</html>
