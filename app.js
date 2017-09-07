@@ -88,7 +88,7 @@ function checkUpdate(){
             //BTW, IIFE is actually not needed for accessing global scopes in this manner...
             */
             request.post({url:url}, function(error, response, body){
-                var jsondata = JSON.parse(body);
+                var jsondata = JSON.parse(body); //FIXME : jsondata will be corrupt if Naver fails to respond accordingly(seems to happen around 5AM, which is probably causing the crash).
                 var joblist = [];
                 for(var i=0; i<jsondata.length; ++i){
                     if(prevjoblist.indexOf(position_type + jsondata[i].jobNm)==-1){
