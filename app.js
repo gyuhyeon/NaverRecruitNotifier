@@ -153,8 +153,8 @@ function sendNotification(msg = '채용 공고가 업데이트 되었습니다.'
 }
 
 //test once when server starts running
-sendSMS("010-7248-1535", "Twilio operational :)");
-
+//sendSMS("010-7248-1535", "Twilio operational :)");
+//SMS test disabled to prevent latenight spam at 5AM..
 
 setInterval(checkUpdate, 20000);
 
