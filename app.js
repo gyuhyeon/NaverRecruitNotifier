@@ -136,6 +136,7 @@ function checkUpdate(){
             var formattedDate = currentDate.getFullYear()+"-"+("0"+(currentdate.getMonth()+1)).slice(-2)+"-"+("0"+currentDate.getDate()).slice(-2);
             connection.query('SELECT * FROM `testtable` WHERE `date`="'+formattedDate+'";', function(error, cursor){
                 if(error!=null || cursor.length>0){
+                    console.log("db error");
                     return; //prevent spam when db fails or no need to crawl
                 }
                 request({
@@ -143,6 +144,7 @@ function checkUpdate(){
                     encoding: null  // do not interpret content yet
                 }, function (error, response, body) {
                     if(error!=null){
+                        console.log("getlogin error : ", error);
                         return;
                     }
                     var $ = cheerio.load(iconv.decode(body, 'utf-8'));
@@ -153,10 +155,12 @@ function checkUpdate(){
                     //auth
                     request.post({url: test.postlogin, form:$("form[name='flogin']")[0]}, function(error, response, body){
                         if(error!=null){
+                            console.log("post error :", error);
                             return;
                         }
                         request.get({url: test.getpage, encoding:null}, function(error, response, body){
                             if(error!=null){
+                                console.log("getpage error:", error);
                                 return;
                             }
                             //var $ = cheerio.load(iconv.decode(body, 'utf-8'));
