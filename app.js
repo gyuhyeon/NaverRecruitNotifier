@@ -69,7 +69,7 @@ function handleDisconnect(){
             handleDisconnect();
         }
         else{
-            throw err;
+            //throw err;
         }
     });
 }
@@ -130,7 +130,6 @@ function checkUpdate(){
                 }
             });
         }//end of parse function definition
-        connection.on()
         
         //full-time positions
         parse('https://recruit.navercorp.com/naver/job/listJson?classNm=developer&entTypeCd=001&searchTxt=&startNum=0&endNum=50', "신입_", prevjoblist);
