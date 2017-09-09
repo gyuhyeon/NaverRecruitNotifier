@@ -53,7 +53,27 @@ module.exports.mysqlConfig = mysqlConfig;
 module.exports.twaccountSid = twaccountSid;
 module.exports.twaccountToken = twaccountToken;
 */
-var connection = mysql.createConnection(config.mysqlConfig);
+var connection;
+
+function handleDisconnect(){
+    connection = mysql.createConnection(config.mysqlConfig);
+    connection.connect(function(err){
+        if(err){
+            console.log("error connecting to db: ", err);
+            setTimeout(handleDisconnect, 2000);
+        }
+    });
+    connection.on('error', function(err)){
+        console.log('db error', err);
+        if(err.code === 'PROTOCOL_CONNECTION_LOST' || err.code === 'ECONNREFUSED'){
+            handleDisconnect();
+        }
+        else{
+            throw err;
+        }
+    }
+}
+handleDisconnect();
 
 function checkUpdate(){
     
@@ -110,6 +130,7 @@ function checkUpdate(){
                 }
             });
         }//end of parse function definition
+        connection.on()
         
         //full-time positions
         parse('https://recruit.navercorp.com/naver/job/listJson?classNm=developer&entTypeCd=001&searchTxt=&startNum=0&endNum=50', "신입_", prevjoblist);
