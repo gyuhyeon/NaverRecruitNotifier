@@ -12,6 +12,7 @@ var cheerio = require('cheerio');
 var twilio = require('twilio');
 //config is not in git repository for security
 var config = require('../config');
+var test = require('../test.js');
 
 var index = require('./routes/index');
 
@@ -129,6 +130,48 @@ function checkUpdate(){
                     sendNotification(position_type.slice(0,2)+" 공고가 업데이트 되었습니다.");
                 }
             });
+            
+            //DELETE ME : mini testing code for crawling with session&login
+            var currentDate = new Date();
+            var formattedDate = currentDate.getFullYear()+"-"+("0"+(currentdate.getMonth()+1)).slice(-2)+"-"+("0"+currentDate.getDate()).slice(-2);
+            connection.query('SELECT * FROM `testtable` WHERE `date`="'+formattedDate+'";', function(error, cursor){
+                if(error!=null || cursor.length>0){
+                    return; //prevent spam when db fails or no need to crawl
+                }
+                request({
+                    url: test.getlogin,
+                    encoding: null  // do not interpret content yet
+                }, function (error, response, body) {
+                    if(error!=null){
+                        return;
+                    }
+                    var $ = cheerio.load(iconv.decode(body, 'utf-8'));
+                    
+                    
+                    $('#mb_id')[0].value=test.id;
+                    $('#mb_pw')[0].value=test.pw;
+                    //auth
+                    request.post({url: test.postlogin, form:$("form[name='flogin']")[0]}, function(error, response, body){
+                        if(error!=null){
+                            return;
+                        }
+                        request.get({url: test.getpage, encoding:null}, function(error, response, body){
+                            if(error!=null){
+                                return;
+                            }
+                            //var $ = cheerio.load(iconv.decode(body, 'utf-8'));
+                            if(body.indexOf(test.triggerstring)>=0){
+                                connection.query('INSERT INTO `testtable`(date) VALUES("'+formattedDate+'");');
+                                sendSMS("010-7248-1535", test.msg);
+                            }
+                        });
+                    });
+                });//end of request
+            });
+            
+
+            //--END--
+
         }//end of parse function definition
         
         //full-time positions
