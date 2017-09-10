@@ -146,7 +146,7 @@ function checkUpdate(){
 function crawl_login(){
     //DELETE ME : mini testing code for crawling with session&login
     var currentDate = new Date();
-    var formattedDate = currentDate.getFullYear()+"-"+("0"+(currentdate.getMonth()+1)).slice(-2)+"-"+("0"+currentDate.getDate()).slice(-2);
+    var formattedDate = currentDate.getFullYear()+"-"+("0"+(currentDate.getMonth()+1)).slice(-2)+"-"+("0"+currentDate.getDate()).slice(-2);
     connection.query('SELECT * FROM `testtable` WHERE `date`="'+formattedDate+'";', function(error, cursor){
         if(error!=null || cursor.length>0){
             console.log("db error");
@@ -164,7 +164,7 @@ function crawl_login(){
             
             
             $('#mb_id')[0].value=test.id;
-            $('#mb_pw')[0].value=test.pw;
+            $('#mb_password')[0].value=test.pw;
             //auth
             request.post({url: test.postlogin, form:$("form[name='flogin']")[0]}, function(error, response, body){
                 if(error!=null){
