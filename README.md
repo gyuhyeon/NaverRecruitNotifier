@@ -1,11 +1,17 @@
 # NaverRecruitNotifier
 Crawls a page to check for new positions at Naver Corp.  
+Crawls ![Naver recruit page](https://recruit.navercorp.com/naver/job/list/developer).  
+To sign up for the notification, sign up at ![gyuhyeonlee.com](gyuhyeonlee.com).  
+Note that the link may be down or the website may not provide the same service in the future.  
+  
 Notification working example :  
   
-![alt text][logo]
-
-[logo]: http://i.imgur.com/EXXNN6t.png? "example"  
-
+![example image](NotificationExample.png)  
+  
+Front-end signup example :  
+  
+![example image](WebpageExample.PNG)
+  
 # Languages/Libraries used
 + Node.js w/ express & request (Server backend)
 + Ejs (frontend rendering)
@@ -13,11 +19,15 @@ Notification working example :
 + Twilio (SMS service)
 
 # How to use (web service)
-Service will be provided via gyuhyeonlee.com.  
-However, the service is not ready yet :(
+Service is provided via ![gyuhyeonlee.com](gyuhyeonlee.com). Note that service may end without warning at any time.  
 
 # How to use (fork/code usage)
-Description coming soon :)
+```
+npm install
+node app.js
+//proper mysql DB config required at one folder higher than root(project folder).
+//service will be available at localhost:8000 unless port variable is changed in app.js
+```
 
 # License
 Copyright (c) 2017 Gyuhyeon Lee
