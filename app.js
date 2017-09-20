@@ -121,12 +121,16 @@ function checkUpdate(){
                 var joblist = [];
                 for(var i=0; i<jsondata.length; ++i){
                     if(prevjoblist.indexOf(position_type + jsondata[i].jobNm)==-1){
-                        joblist.push(position_type + jsondata[i].jobNm);
+                        joblist.push(jsondata[i].jobNm);
                         connection.query('INSERT INTO `NaverJobs`(jobTitle) VALUES ("' + position_type + jsondata[i].jobNm + '");');
                     }
                 }
                 if(joblist.length>0){
-                    sendNotification(position_type.slice(0,2)+" 공고가 업데이트 되었습니다.");
+                    var text=joblist[0];
+                    if(joblist.length>1){
+                        text+=" 외 "+(joblist.length-1)+"건";
+                    }
+                    sendNotification(position_type.slice(0,2)+" 공고가 업데이트 되었습니다: "+text);
                 }
             });
             
