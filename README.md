@@ -1,7 +1,7 @@
 # NaverRecruitNotifier
 Crawls a page to check for new positions at Naver Corp.  
-Crawls ![Naver recruit page](https://recruit.navercorp.com/naver/job/list/developer).  
-To sign up for the notification, sign up at ![gyuhyeonlee.com](gyuhyeonlee.com).  
+Crawls [Naver recruit page](https://recruit.navercorp.com/naver/job/list/developer).  
+To sign up for the notification, sign up at [gyuhyeonlee.com](http://gyuhyeonlee.com).  
 Note that the link may be down or the website may not provide the same service in the future.  
   
 Notification working example :  
@@ -19,7 +19,7 @@ Front-end signup example :
 + Twilio (SMS service)
 
 # How to use (web service)
-Service is provided via ![gyuhyeonlee.com](gyuhyeonlee.com). Note that service may end without warning at any time.  
+Service is provided via [gyuhyeonlee.com](http://gyuhyeonlee.com). Note that service may end without warning at any time.  
 
 # How to use (fork/code usage)
 ```
