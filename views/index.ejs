@@ -43,7 +43,7 @@
         }
         $(document).ready(function() {
             // process the form
-            $('$enlist').click(function(event){
+            $('#enlist').click(function(event){
                 //if input verification failed
                 if(verify()==false){
                     return;
@@ -82,7 +82,7 @@
                 // stop the form from submitting the normal way and refreshing the page
                 // event.preventDefault(); not actually necessary if we don't hook off of form submit action.
             });
-            $('$unsubscribe').click(function(event){
+            $('#unsubscribe').click(function(event){
                 //if input verification failed
                 if(verify()==false){
                     return;
