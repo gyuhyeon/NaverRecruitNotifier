@@ -63,10 +63,15 @@ router.post('/unsubscribe', function(req, res, next) {
         //everything OK, now we add the phone number to the DB.
         connection.query('DELETE FROM `NaverJobs`.`NotifyList` WHERE `phonenumber`="'+req.body.phonenumber+'";', function(error, cursor){
             if(error==null){
-                return res.json({"response" : "Success! Your number has been deleted."});
+                if(cursor.affectedRows>0){
+                    return res.json({"response" : "Success! Your number has been deleted."});
+                }
+                else{
+                    return res.json({"response" : "Your number is not in the database!"});
+                }
             }
             else{
-                return res.json({"response" : "We're sorry, but either our DB is not working, or your number is not in the database!"});
+                return res.json({"response" : "We're sorry, our DB seems to be down right now..."});
             }
         }); //end of insert connection.query
 
