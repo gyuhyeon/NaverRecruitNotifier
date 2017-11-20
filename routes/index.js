@@ -31,7 +31,7 @@ router.post('/enlist', function(req, res, next) {
             if(error==null){
                 var twclient = new twilio(config.twaccountSid, config.twaccountToken);
                 twclient.messages.create({
-                    body: "Welcome to Naver job opening notification service!",
+                    body: "Welcome to Naver job opening notification service!"+" / 구독취소:gyuhyeonlee.com",
                     to: '+82'+req.body.phonenumber,
                     from: '+12568184331'
                 })
@@ -61,7 +61,7 @@ router.post('/unsubscribe', function(req, res, next) {
             return res.json({"response" : "Recaptcha validation failed, please try again."})
         }
         //everything OK, now we add the phone number to the DB.
-        connection.query('DELETE FROM `NaverJobs`.`NotifyList` WHERE `phonenumber`="'+req.body.phonenumber+'");', function(error, cursor){
+        connection.query('DELETE FROM `NaverJobs`.`NotifyList` WHERE `phonenumber`="'+req.body.phonenumber+'";', function(error, cursor){
             if(error==null){
                 return res.json({"response" : "Success! Your number has been deleted."});
             }

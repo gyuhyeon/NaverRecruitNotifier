@@ -130,7 +130,7 @@ function checkUpdate(){
                     if(joblist.length>1){
                         text+=" 외 "+(joblist.length-1)+"건";
                     }
-                    sendNotification(position_type.slice(0,2)+" 공고가 업데이트 되었습니다: "+text);
+                    sendNotification(position_type.slice(0,2)+" 공고가 업데이트 되었습니다: "+text+" / 구독취소:gyuhyeonlee.com");
                 }
             });
             
