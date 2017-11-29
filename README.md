@@ -6,11 +6,11 @@ Note that the link may be down or the website may not provide the same service i
   
 Notification working example :  
   
-![example image](NotificationExample.png)  
+![example image](./static_sample/NotificationExample.png)  
   
 Front-end signup example :  
   
-![example image](WebpageExample.PNG)
+![example image](./static_sample/WebpageExample.png)
   
 # Languages/Libraries used
 + Node.js w/ express & request (Server backend)
