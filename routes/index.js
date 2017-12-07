@@ -1,5 +1,6 @@
 var express = require('express');
 var request = require('request');
+var rp = require('rp');
 var config = require('../../config')
 var router = express.Router();
 var twilio = require('twilio');
@@ -77,5 +78,57 @@ router.post('/unsubscribe', function(req, res, next) {
 
     }); //end of request.post (sorry for callback hell!)
 });
+
+// line webhook for receiving sub&unsub events.
+router.post('/lineevents', function(req, res, next) {
+    let insertvalues = [];
+    let removevalues = [];
+    if(req.body.events!==null && req.body.events!==undefined){
+        for (let i = 0; i < req.body.events.length; ++i) {
+            if (req.body.events[i].type == 'follow') {
+                insertvalues.push(req.body.events[i].source.userId);
+            }
+            else if(req.body.events[i].type == 'unfollow') {
+                removevalues.push(req.body.events[i].source.userId);
+            }
+        }
+        if (insertvalues.length > 0) {
+            // don't really care about data consistency. All we need make sure is that removing takes priority over adding.
+            connection.query('INSERT INTO `NaverJobs`.`LineFriends`(id) VALUES (?);', insertvalues, function(error, cursor){
+                if(error == null){
+                    let options = {
+                        method: "POST",
+                        uri: "https://api.line.me/v2/bot/message/multicast",
+                        headers: {
+                            'Content-Type':'application/json',
+                            'Authorization':'Bearer {'+config.linetoken+'}'
+                        },
+                        body: {
+                            to: insertvalues,
+                            messages: [{"type":"text", "text": "구독 신청 감사합니다! 변경사항이 있을 경우 바로 알려드릴게요 :)"}]
+                        },
+                        json: true // this encodes our body as json when SENDING POST request.
+                        // in GET requests, this means it will encode RESPONSE in json when we RECEIVE IT.
+                        // pretty confusing...
+                    };
+                    rp(options).catch((e) => console.log(e)); // one way request, don't really need .then() promises. Send greetings to new users.
+                }
+                else{
+                    console.log("DB error : "+error);
+                }
+            });
+        }
+        if (removevalues.length > 0) {
+            connection.query('DELETE FROM `NaverJobs`.`LineFriends` WHERE `id`=?;', removevalues, function(error){
+                if(error != null){
+                    console.log("DB error : "+error);
+                }
+            });
+        }
+    }
+    res.set('Content-Type', 'text/plain');
+    res.send("Thanks LINE!");
+});
+
 
 module.exports = router;
